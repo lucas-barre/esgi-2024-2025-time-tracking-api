@@ -1,20 +1,19 @@
 import { Schema, model } from 'mongoose';
 
-const projectSchema = new Schema({
+const taskSchema = new Schema({
   name: { type: String, required: true },
-  slug: { type: String, unique: true, required: true },
+  slug: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-  client: { type: String, required: true, default: "SelfEngaged" }
+  project: { type: Schema.Types.ObjectId, ref: 'Project', required: true }
 });
 
-projectSchema.pre('validate', async function (next) {
+taskSchema.pre('validate', async function (next) {
     if (!this.slug) {
         const baseSlug = this.name.toLowerCase().replace(/[\s]+/g, '-').replace(/[^\w-]+/g, '');
         let slug = baseSlug;
         let count = 1;
 
-        while (await model("Project").exists({ slug })) {
+        while (await model("Task").exists({ project: this.project, slug })) {
             slug = `${baseSlug}-${count}`;
             count++;
         }
@@ -24,4 +23,4 @@ projectSchema.pre('validate', async function (next) {
     next();
 });
 
-export default model("Project", projectSchema);
+export default model("Task", taskSchema);

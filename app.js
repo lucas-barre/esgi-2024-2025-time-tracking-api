@@ -10,6 +10,7 @@ import indexRouter from './routes/index.js';
 import authRouter from './routes/auth.js';
 import usersRouter from './routes/users.js';
 import projectsRouter from './routes/projects.js';
+import tasksRouter from './routes/tasks.js';
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/projects', projectsRouter);
+app.use('/projects', tasksRouter);
 
 export default app;
